@@ -64,15 +64,19 @@ class Room(core_model.TimeStampedModel):
     check_out = models.TimeField()
     instant_book = models.BooleanField(default=False)
     room_type = models.ForeignKey(
-        RoomType, blank=True, on_delete=models.SET_NULL, null=True
+        RoomType, blank=True, related_name="rooms", on_delete=models.SET_NULL, null=True
     )
-    amenities = models.ManyToManyField(Amenity, blank=True)
-    facilities = models.ManyToManyField(Facility, blank=True)
-    house_rules = models.ManyToManyField(HouseRule, blank=True)
+    amenities = models.ManyToManyField(Amenity, related_name="rooms", blank=True)
+    facilities = models.ManyToManyField(Facility, related_name="rooms", blank=True)
+    house_rules = models.ManyToManyField(HouseRule, related_name="rooms", blank=True)
 
     # Connecting room to a host user
     # cascade means if user deleted, delete their rooms as well
-    host = models.ForeignKey(users_model.User, on_delete=models.CASCADE)
+
+    # related name makes "room-set" in users to be just"rooms"
+    host = models.ForeignKey(
+        users_model.User, related_name="rooms", on_delete=models.CASCADE
+    )
 
     # usually python will show the name of a room object as RoomObject1
     # we can override __str__ method to say what we want the name of
@@ -81,10 +85,32 @@ class Room(core_model.TimeStampedModel):
     def __str__(self):
         return self.name
 
+    # this is called when anyone saves a model
+    # can be used to intercept and make default changes such as making
+    #  a name start with capital, etc. or possibly overriding anything u wish
+    # such as self.city="banana" will always save city as banana
+    # irrespective of what goes in the city field in the form
+    def save(self, *args, **kwargs):
+        self.city = str.capitalize(self.city)
+        super().save(*args, **kwargs)
+
+    def total_rating(self):
+        all_reviews = self.reviews.all()
+        all_ratings = 0
+        for review in all_reviews:
+            all_ratings += review.rating_average()
+        try:
+            return round(all_ratings / len(all_reviews), 2)
+        except ZeroDivisionError:
+            return 0.00
+
 
 class Photo(core_model.TimeStampedModel):
     """ Photo Model Definition """
 
     caption = models.CharField(max_length=80)
-    file = models.ImageField()
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    file = models.ImageField(upload_to="room_photos")
+    room = models.ForeignKey(Room, related_name="photos", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.room.name} - {self.caption}"

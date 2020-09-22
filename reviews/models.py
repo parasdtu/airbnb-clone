@@ -16,10 +16,29 @@ class Review(core_models.TimeStampedModel):
     location = models.IntegerField()
     check_in = models.IntegerField()
     value = models.IntegerField()
-    user = models.ForeignKey(users_model.User, on_delete=models.CASCADE)
-    room = models.ForeignKey(rooms_model.Room, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        users_model.User, related_name="reviews", on_delete=models.CASCADE
+    )
+    room = models.ForeignKey(
+        rooms_model.Room, related_name="reviews", on_delete=models.CASCADE
+    )
 
-    # any amoutn of nesting can be done meaning
+    # any amount of nesting can be done meaning
     # you can call room from self then host from room and go many layers deep
     def __str__(self):
         return f"{self.review}-{self.room}"
+
+    def rating_average(self):
+        avg = (
+            self.accuracy
+            + self.communication
+            + self.cleanliness
+            + self.location
+            + self.check_in
+            + self.value
+        ) / 6.0
+
+        return round(avg, 2)
+
+    # column name where rating is diaplayed is changed like this
+    rating_average.short_description = "Average Rating"

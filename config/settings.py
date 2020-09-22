@@ -49,7 +49,7 @@ PROJECT_APPS = [
     "conversations.apps.ConversationsConfig",
 ]
 
-THIRD_PARTY_APPS = ["django_countries"]
+THIRD_PARTY_APPS = ["django_countries", "django_seed"]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
 
@@ -136,3 +136,14 @@ STATIC_URL = "/static/"
 # the statement below is added because we wanted to use our custom user model
 # not the one django provides by default
 AUTH_USER_MODEL = "users.User"
+
+# tell django where to put the media files
+# otherwise it will just add files in root directory
+MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
+
+# will add media url just after the root folder like this
+# http://127.0.0.1:8000/media/room_photos/IMG_20200903_005840.jpg
+# instead of the entire url like this
+# http://127.0.0.1:8000/admin/rooms/photos/media/room_photos/IMG_20200903_005840.jpg
+# as this will show media not found error
+MEDIA_URL = "/media/"

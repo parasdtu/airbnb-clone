@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from . import models
+from rooms.admin import RoomInline
 
 # Register your models here.
 # this class modifies how admin panel looks by adding
@@ -18,6 +19,8 @@ class CustomUserAdmin(UserAdmin):
     # list_display = ("username", "gender", "language", "currency", "superhost")
     # list_filter = ("language", "superhost", "currency")
 
+    inlines = (RoomInline,)
+
     fieldsets = UserAdmin.fieldsets + (
         (
             "Custom Profile",
@@ -34,3 +37,18 @@ class CustomUserAdmin(UserAdmin):
             },
         ),
     )
+
+    list_display = (
+        "username",
+        "first_name",
+        "last_name",
+        "email",
+        "is_active",
+        "language",
+        "currency",
+        "superhost",
+        "is_staff",
+        "is_superuser",
+    )
+
+    list_filter = UserAdmin.list_filter + ("superhost",)

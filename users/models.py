@@ -36,7 +36,7 @@ class User(AbstractUser):
     # null=True tells fatabase that null values can be accepted
     # blank=True means that filling the field is not compulsory
 
-    avatar = models.ImageField(blank=True)
+    avatar = models.ImageField(upload_to="avatars", blank=True)
     gender = models.CharField(choices=GENDER_CHOICES, max_length=10, blank=True)
     bio = models.TextField(default="", blank=True)
     birthdate = models.DateField(blank=True, null=True)
