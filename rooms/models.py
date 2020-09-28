@@ -60,7 +60,7 @@ class Room(core_model.TimeStampedModel):
     beds = models.IntegerField()
     bedrooms = models.IntegerField()
     baths = models.IntegerField()
-    guests = models.IntegerField()
+    guests = models.IntegerField(help_text="How many people will be staying?")
     check_in = models.TimeField()
     check_out = models.TimeField()
     instant_book = models.BooleanField(default=False)
