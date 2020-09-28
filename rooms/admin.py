@@ -57,6 +57,7 @@ class RoomAdmin(admin.ModelAdmin):
                     "city",
                     "address",
                     "price",
+                    "room_type",
                 ),
             },
         ),
@@ -123,11 +124,11 @@ class RoomAdmin(admin.ModelAdmin):
     # by city and by country
     list_filter = (
         "instant_book",
-        "city",
         "room_type",
         "host__superhost",
         "amenities",
         "facilities",
+        "city",
         "country",
     )
 

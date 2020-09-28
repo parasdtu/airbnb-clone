@@ -1,5 +1,6 @@
 from django.db import models
 from django_countries.fields import CountryField
+from django.urls import reverse
 from core import models as core_model
 from users import models as users_model
 
@@ -103,6 +104,11 @@ class Room(core_model.TimeStampedModel):
             return round(all_ratings / len(all_reviews), 2)
         except ZeroDivisionError:
             return 0.00
+
+    # adds a "view on site" option to the admin panel
+    # that takes us to the same page on actual site
+    def get_absolute_url(self):
+        return reverse("rooms:detail", kwargs={"pk": self.pk})
 
 
 class Photo(core_model.TimeStampedModel):
