@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView
 from django.contrib.auth import authenticate, login, logout
-from . import forms
+from . import forms, models
 
 
 # does the same thing as the LoginView1 class
@@ -99,7 +99,27 @@ class SignUpView(FormView):
         user = authenticate(self.request, username=email, password=password)
         if user is not None:
             login(self.request, user)
+        user.verify_email()
         return super().form_valid(form)
 
     # super takes us to the success url automatically
     # we don't have to redirect
+
+
+def complete_verification(request, secret):
+    print(secret)
+    try:
+        user = models.User.objects.get(email_secret=secret)
+        print(user)
+        user.email_verified = True
+
+        # delete the secret key now
+        user.email_secret = ""
+        user.save()
+        # to do: add success message
+    except models.User.DoesNotExist:
+        # user does not exist with that email
+        # to do: throw error message
+        pass
+
+    return redirect(reverse("core:home"))

@@ -147,3 +147,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "uploads")
 # http://127.0.0.1:8000/admin/rooms/photos/media/room_photos/IMG_20200903_005840.jpg
 # as this will show media not found error
 MEDIA_URL = "/media/"
+
+
+# Email Configuration
+EMAIL_HOST = "smtp-relay.sendinblue.com"
+EMAIL_PORT = "587"
+# print(os.environ.get("SENDINBLUE_USERNAME"), os.environ.get("SENDINBLUE_PASSWORD"))
+EMAIL_HOST_USER = os.environ.get("SENDINBLUE_USERNAME")
+EMAIL_HOST_PASSWORD = os.environ.get("SENDINBLUE_PASSWORD")
+EMAIL_FROM = "asingh.harjot@gmail.com"
