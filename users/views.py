@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from . import forms
 
 
+# does the same thing as the LoginView1 class
 class LoginView(FormView):
 
     template_name = "users/login.html"
@@ -20,6 +21,8 @@ class LoginView(FormView):
         if user is not None:
             login(self.request, user)
         return super().form_valid(form)
+        # super takes us to the success url automatically
+        # we don't have to redirect
 
 
 # Create your views here.
@@ -76,3 +79,27 @@ def log_out(request):
     elif request.method == "POST":
         pass
 """
+
+
+class SignUpView(FormView):
+    template_name = "users/signup.html"
+    form_class = forms.SignUpForm
+    success_url = reverse_lazy("core:home")
+    initial = {
+        "first_name": "Harjot",
+        "last_name": "Singh",
+        "email": "harjot@gmail.com",
+    }
+
+    def form_valid(self, form):
+        print("cleaned data= ", form.cleaned_data)
+        form.save()
+        email = form.cleaned_data.get("email")
+        password = form.cleaned_data.get("password")
+        user = authenticate(self.request, username=email, password=password)
+        if user is not None:
+            login(self.request, user)
+        return super().form_valid(form)
+
+    # super takes us to the success url automatically
+    # we don't have to redirect
