@@ -6,7 +6,8 @@ from django.contrib.auth.models import AbstractUser
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
-from django.utils.html import strip_tags
+# from django.utils.html import strip_tags
+# used to strip html tags off a html script
 
 # to send verification email to the user
 
@@ -45,6 +46,16 @@ class User(AbstractUser):
 
     CURRENCY_CHOICES = ((CURRENCY_USD, "USD"), (CURRENCY_INR, "INR"))
 
+    LOGIN_EMAIL = "email"
+    LOGIN_GITHUB = "github"
+    LOGIN_GMAIL = "gmail"
+
+    LOGIN_CHOICES = (
+        (LOGIN_EMAIL, "Email"),
+        (LOGIN_GITHUB, "Github"),
+        (LOGIN_GMAIL, "Gmail"),
+    )
+
     # null=True tells fatabase that null values can be accepted
     # blank=True means that filling the field is not compulsory
 
@@ -71,6 +82,12 @@ class User(AbstractUser):
         max_length=120,
         default="",
         blank=True,
+    )
+
+    login_method = models.CharField(
+        max_length=50,
+        choices=LOGIN_CHOICES,
+        default=LOGIN_EMAIL,
     )
 
     def verify_email(self):

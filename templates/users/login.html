@@ -9,9 +9,9 @@
 {% endblock search_bar %}
 {% block content %}
 
-    <h2>Hello!!</h2>
+    {% include "partials/social_login.html" %}
 
-  <form method="POST" action="{% url 'users:login' %}">
+    <form method="POST" action="{% url 'users:login' %}">
         {% csrf_token %}
         {{form.as_p}}
         <button>Login</button>

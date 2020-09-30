@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth import password_validation
 from . import models
 
 
@@ -74,7 +75,8 @@ class LoginForm(forms.Form):
 # otherwise it is almost as equivalent as removing the field
 # ie. will return None unless we return a value
 
-
+# can also extend from django built-in forms
+# like UserCreationForm from django.contrib.auth.forms
 class SignUpForm(forms.ModelForm):
     class Meta:
         # here we specify the model we want to create a form for
@@ -90,14 +92,30 @@ class SignUpForm(forms.ModelForm):
             "email",
         )
 
-    password = forms.CharField(widget=forms.PasswordInput)
-    password1 = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
+    password = forms.CharField(
+        widget=forms.PasswordInput,
+        help_text=password_validation.password_validators_help_text_html(),
+    )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput,
+        label="Confirm Password",
+        help_text="Enter same password as above",
+    )
 
     # we don't have to use clean email anymore cuz it will be
     # cleaned by ModelForm
 
     # however we need to clean password cuz it is custom
     # and not defined in model
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+
+        if password:
+            try:
+                password_validation.validate_password(password, self.instance)
+            except forms.ValidationError as error:
+                self.add_error("password", error)
 
     def clean_password1(self):
         # note that you can get password from clean_password1
@@ -120,7 +138,7 @@ class SignUpForm(forms.ModelForm):
     def save(self, *args, **kwargs):
         user = super().save(commit=False)
         """the above call saye to create the user object
-        BUT do not add it to database 
+        BUT do not add it to database
         because we will do it on our own"""
 
         print(self.cleaned_data)
