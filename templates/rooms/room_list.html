@@ -9,32 +9,36 @@ which we will usee below {% endcomment %}
 
 {% block content%} 
 
- {% comment %} on clicking on the room its details will be called
-        by sending its id to the url {% endcomment %}
-    {% for room in rooms %}
-        <h3>
-        {% comment %} the below url is same as this string /rooms/{{room.pk}} {% endcomment %}
-            <a href="{% url 'rooms:detail' room.pk%}">
-                {{room.pk}}- {{room.name}} - {{room.price}}
-            </a>
-        </h3>
-    {% endfor %} 
+    <div class="container mx-auto">
 
-    <h5> 
-    {% if page_obj.has_previous %}
-        <a href="?page={{page.previous_page_number}}">Previous</a>
-    {% endif %}
+        <div class="container rounded-xl mx-auto bg-gray-800 h-50vh mt-32 mb-24 bg-center bg-cover" style="background-image:url(https://images.unsplash.com/photo-1541336032412-2048a678540d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=634&q=80)"></div>
 
-    Page {{page_obj.number}} of {{page_obj.paginator.num_pages}}
+            {% comment %} on clicking on the room its details will be called
+            by sending its id to the url {% endcomment %}
+        <div class="flex flex-wrap px-1 mb-10">
+            {% for room in rooms %}
+                {% include "partials/room_card.html" with room=room %}
+            {% endfor %} 
+        </div>
 
+        <div class="flex pb-10 items-center justify-center mx-auto container"> 
+            {% if page_obj.has_previous %}
+                <a href="?page={{page.previous_page_number}}" class="text-teal-400">
+                    <i class="fas fa-arrow-left fa-lg"></i>
+                </a>
+            {% endif %}
 
-    {% if page_obj.has_next %}
-        <a href="?page={{page_obj.next_page_number}}">Next</a>
-    {% endif %}
-    </h5>
+            <span class="mx-3">{{page_obj.number}} of {{page_obj.paginator.num_pages}}</span>
 
 
+            {% if page_obj.has_next %}
+                <a href="?page={{page_obj.next_page_number}}" class="text-teal-400">
+                    <i class="fas fa-arrow-right fa-lg"></i>
+                </a>
+            {% endif %}
+        </div>
 
+    </div>
     
 {% endblock content%}
 

@@ -131,7 +131,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+
+# no one has access to thie directory if run on browser
+# meaning when someone enters www.url.com/static/ a 404 error will be thrown
+# because we don't one anyone to look at our server files
 STATIC_URL = "/static/"
+
+
+# this one creates an exception to the above
+# this path will make this url accessible from browser
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # the statement below is added because we wanted to use our custom user model
 # not the one django provides by default

@@ -1,0 +1,23 @@
+<div class="w-1/4 mb-10 px-2 overflow-hidden">
+    <a href="{% url 'rooms:detail' room.pk %}">
+        <div class="w-full h-64 rounded-md bg-cover mb-2 bg-center" style="background-image:url('{{room.first_photo}}');"></div>
+        <div class="flex justify-between items-center mb-2">
+            <div class="w-4/5 truncate block">
+                {% if room.host.superhost %}
+                    <span class="uppercase mr-px px-1 py-0.5 font-medium text-xs border text-black border-black rounded-sm">superhost</span>
+                {% endif %}
+                <span class="text-sm text-gray-600 font-light">{{room.city}}, {{room.country.name}}</span>
+            </div>
+            <span class="text-sm flex items-center">
+                <i class="fas fa-star text-xs mr-1 text-red-500"></i>{{room.total_rating}}
+            </span>
+        </div>
+        <span class="text-black w-11/12 truncate block">{{room.name}}</span>
+    </a>
+</div>
+
+
+{% comment %} the below url is same as this string /rooms/{{room.pk}} {% endcomment %}
+    {% comment %} <a href="{% url 'rooms:detail' room.pk%}">
+        {{room.pk}}- {{room.name}} - {{room.price}}
+    </a> {% endcomment %}
